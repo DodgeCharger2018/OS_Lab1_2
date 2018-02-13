@@ -12,10 +12,12 @@ int _tmain(int argc, TCHAR *argv[])
 {
 	HANDLE hPipe;
 	LPTSTR lpvMessage = TEXT(argv[1]);
+	//LPTSTR lpvMessage = "YEAA";
 	TCHAR  chBuf[BUFSIZE];
 	BOOL   fSuccess = FALSE;
 	DWORD  cbRead, cbToWrite, cbWritten, dwMode;
 	LPTSTR lpszPipename = TEXT("\\\\.\\pipe\\mynamedpipe");
+	char reply[100];
 
 	if (argc > 1)
 		lpvMessage = argv[1];
@@ -103,7 +105,7 @@ int _tmain(int argc, TCHAR *argv[])
 
 		fSuccess = ReadFile(
 			hPipe,    // pipe handle 
-			chBuf,    // buffer to receive reply 
+			reply,    // buffer to receive reply 
 			BUFSIZE * sizeof(TCHAR),  // size of buffer 
 			&cbRead,  // number of bytes read 
 			NULL);    // not overlapped 
@@ -111,14 +113,14 @@ int _tmain(int argc, TCHAR *argv[])
 		if (!fSuccess && GetLastError() != ERROR_MORE_DATA)
 			break;
 
-		cout << chBuf << endl;
-	} while (!fSuccess);  // repeat loop if ERROR_MORE_DATA 
+		cout << reply << endl;
+	} while (1);  // repeat loop if ERROR_MORE_DATA !fSuccess
 
-	if (!fSuccess)
+	/*if (!fSuccess)
 	{
 		_tprintf(TEXT("ReadFile from pipe failed. GLE=%d\n"), GetLastError());
 		return -1;
-	}
+	}*/
 
 	printf("\n<End of message, press ENTER to terminate connection and exit>");
 	_getch();
